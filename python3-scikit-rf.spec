@@ -12,9 +12,10 @@ Source0:	https://pypi.debian.net/scikit-rf/scikit_rf-%{version}.tar.gz
 # Source0-md5:	3a41d221e3bac5497ca2d6e45e0cbe59
 URL:		https://scikit-rf.org/
 BuildRequires:	python3-devel >= 1:3.5
-BuildRequires:	python3-pip
+BuildRequires:	python3-build
+BuildRequires:	python3-installer
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
+BuildRequires:	rpmbuild(macros) >= 2.044
 %if %{with tests}
 BuildRequires:	pydoc3
 BuildRequires:	python3-pandas
@@ -36,7 +37,7 @@ out the Documentation for a more in-depth look at scikit-rf.
 %setup -q -n scikit_rf-%{version}
 
 %build
-%{__python3} -m build --no-isolation
+%py3_build_pyproject
 
 %if %{with tests}
 PYTHONPATH=$(pwd) pytest-3 skrf/tests/
@@ -45,7 +46,7 @@ PYTHONPATH=$(pwd) pytest-3 skrf/tests/
 %install
 rm -rf $RPM_BUILD_ROOT
 
-pip3 install --no-deps --target=$RPM_BUILD_ROOT%{py3_sitescriptdir} dist/scikit_rf*.whl
+%py3_install_pyproject
 
 %clean
 rm -rf $RPM_BUILD_ROOT
